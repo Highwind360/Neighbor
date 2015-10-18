@@ -41,8 +41,8 @@ http.listen(8080, function(){
 	console.log('program listening on *:8080');
 });
 
-var users = [];
-var matched_users = [];
+var users = {};
+var queue = [];
 var rooms = {};
 
 /********************************** ROUTING **********************************/
@@ -63,19 +63,18 @@ app.get('/chat', function(req, res) {
 
 io.on('connection', function(socket){
 	serverLog(5, "user connected");
+	var user = initUser(socket);
+	users[user.uin] = user;
 	socket.on("location", function(coords) {
 		serverLog(1, "coords passed: " + coords);
 		if (coords) {
 			serverLog(4, "got location...");
-			var userObj = {};
-			userObj[socket.id] = {
-				"lat": coords.latitude,
-				"lon": coords.longitude,
-				"connectedTo": null,
-				"searchStart": Date.now()
-			};
-			users.push(userObj);
-			matchmaker(userObj, socket.id);
+			users[user.uin].lat = coords.latitude;
+			users[user.uin].lon = coords.longitude;
+			users[user.uin].mms = Date.now();
+			queue.push(users[user.uin]);
+			users[user.uin].qInd = queue.length - 1;
+			matchmaker(users[user.uin]);
 		}
 	});
 	socket.on("next", function(currentRoomId) {
@@ -99,35 +98,51 @@ io.on('connection', function(socket){
  *	This function returns the most relevant user to connect to, given a userObject
  */
 function match(userObj) {
-	var closest_user;
+	var closest_user = null;
 	var closest_dist = -1; // initialize to negative distance -- i.e. impossible value
+	var match_index  = -1;
+
+	var len = queue.length;
 	
-	users.forEach(function(key) {
-		if (typeof users[key].lat === "number" && typeof users[key].lon === "number") {
-			var dist = coordDistance(userObj.lat, userObj.lon, users[key].lat, users[key].lon);
-			if (dist < closest_dist || ((closest_dist < 0) && dist > closest_dist)) { 
-				// TODO: better checking of negative (can't have negative distance)
-				closest_dist = dist;
-				closest_user = key;
-				serverLog(1, "dist found");
-			}
+	for (var i = 0; i < len; i++) {
+		var potentialMatch = queue[len - 1 - i];
+		var dist = coordDistance(userObj.lat, userObj.lon, potentialMatch.lat, potentialMatch.lon);
+		serverLog(2, "dist: " + dist);
+		if (dist < closest_dist || ((closest_dist < 0) && dist > closest_dist)) { 
+			closest_dist = dist;
+			closest_user = potentialMatch;
+			match_index  = len - 1 - i;
+			serverLog(1, "dist found");
 		}
-	});
+	}
 	if (closest_dist < 0) {
 		serverLog(0, "no users found");
 		return null;
 	} else {
 		var roomID = guid();
 		serverLog(2, "room generated");
-		userObj.connectedTo = roomID;
-		users[closest_user].connectedTo = roomID;
+		users[userObj.uin].room = roomID;
+		users[closest_user.uin].room = roomID;
+		delete queue[userObj.qInd];
+		delete queue[match_index];
 		rooms[roomID] = {
 			"user1": userObj,
 			"user2": users[closest_user]
 		}
-		// TODO: trigger an event when someone wants to move on to another person
 		return closest_user;
 	}
+}
+
+function initUser(sock) {
+	return {
+		"lat": null,  // user's latitude
+		"lon": null,  // user's longitude
+		"uin": generateUin(),  // user's unique id number
+		"room": null,  // roomID
+		"sock": sock,   // user's socket
+		"qInd": null
+		"n": null
+	};
 }
 
 /**************************** HELPER FUNCTIONS ******************************/
@@ -137,8 +152,8 @@ function matchmaker(userObj, uid) {
 	var matched_user = match(userObj);
 	if (matched_user) {
 		serverLog(3, "emitting roomID");
-		io.sockets.connected[uid].emit("matched", userObj.connectedTo);
-		io.sockets.connected[matched_user].emit("matched", users[matched_user].connectedTo);
+		io.sockets.connected[userObj.sock].emit("matched", users[userObj.uin].room);
+		io.sockets.connected[matched_user.sock].emit("matched", matched_user.room);
 		matched_users[matched_user] = users[matched_user];
 		matched_users[userObj] = users[userObj];
 	} else {
@@ -177,7 +192,7 @@ function guid() {
  *	Generate Unique identification numbers 
  *	TODO: make better???
  */
-function uin() {
+function generateUin() {
 	return "naybr_" + Math.random().toFixed(8).toString(10).replace(".", "");
 }
 
