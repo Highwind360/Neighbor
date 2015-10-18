@@ -1,0 +1,31 @@
+{
+  "name": "neighbor",
+  "version": "1.0.0",
+  "description": "A chat app for meeting people near you!",
+  "main": "neighbor.js",
+  "dependencies": {
+    "express": "^4.13.3",
+    "socket.io": "^1.3.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Highwind360/Neighbor.git"
+  },
+  "keywords": [
+    "neighbor",
+    "chat",
+    "local",
+    "meet",
+    "neighborhood"
+  ],
+  "author": "spencer walden, kevin fan, daniel arens, grayson sinclair, justin inouye",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Highwind360/Neighbor/issues"
+  },
+  "homepage": "https://github.com/Highwind360/Neighbor#readme"
+}
