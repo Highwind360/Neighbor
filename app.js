@@ -128,7 +128,7 @@ function match(userObj) {
 		serverLog(2, "room generated");
 		users[userObj.uin].room = roomID;
 		users[closest_user.uin].room = roomID;
-		delete queue[match_index];  // if someone got removed, i could remove wrong person here :/
+		queue.splice(match_index, 1);  // if someone got removed, i could remove wrong person here :/
 		rooms[roomID] = {
 			"user1": userObj,
 			"user2": users[closest_user]
