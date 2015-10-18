@@ -62,8 +62,9 @@ app.get('/chat', function(req, res) {
 /****************************** EVENT HANDLERS *******************************/
 
 io.on('connection', function(socket){
-	serverLog(1, "user connected");
+	serverLog(5, "user connected");
 	socket.on("location", function(position) {
+		serverLog(4, "got location...");
 		if (position.coords) {
 			var userObj = {};
 			userObj[socket.id] = {
@@ -77,7 +78,7 @@ io.on('connection', function(socket){
 		}
 	});
 	socket.on("next", function(currentRoomId) {
-		
+		serverLog(1, "next button pressed");
 	});
 	socket.on("chat message", function(content) {
 		if (content.trim()) {
@@ -87,7 +88,7 @@ io.on('connection', function(socket){
 	});
 	socket.on("disconnect", function() {
 		console.log("user disconnected");
-		serverLog(1, "user disconnected");
+		serverLog(0, "user disconnected");
 	});
 });
 
@@ -108,13 +109,16 @@ function match(userObj) {
 				// TODO: better checking of negative (can't have negative distance)
 				closest_dist = dist;
 				closest_user = key;
+				serverLog(1, "dist found");
 			}
 		}
 	});
 	if (closest_dist < 0) {
+		serverLog(0, "no users found");
 		return null;
 	} else {
 		var roomID = guid();
+		serverLog(2, "room generated");
 		userObj.connectedTo = roomID;
 		users[closest_user].connectedTo = roomID;
 		rooms[roomID] = {
@@ -132,11 +136,13 @@ function match(userObj) {
 function matchmaker(userObj) {
 	var matched_user = match(userObj);
 	if (matched_user) {
+		serverLog(3, "emitting roomID");
 		io.sockets.socket(socket.id).emit("matched", userObj.connectedTo);
 		io.sockets.socket(matched_user).emit("matched", users[matched_user].connectedTo);
 		matched_users[matched_user] = users[matched_user];
 		matched_users[userObj] = users[userObj];
 	} else {
+		serverLog(0, "no matches");
 		io.sockets.socket(socket.id).emit("notMatched");
 	}
 }
@@ -194,14 +200,14 @@ function serverLog(type, message, extra) {
 		okay = false;
 	}
 	var output = [
-		function(msg) { return chalk.bgRed(msg); },   // -2 
-		function(msg) { return chalk.red(msg); },     // -1
-		function(msg) { return chalk.yellow(msg); },  //  0
-		function(msg) { return chalk.cyan(msg); },    //  1
-		function(msg) { return chalk.magenta(msg); }, //  2
-		function(msg) { return (msg); },              //  3
-		function(msg) { return chalk.inverse(msg); }, //  4
-		function(msg) { return chalk.green(msg); }    //  5
+		function(msg) { return chalk.bgRed("[-] " + msg); },   // -2 
+		function(msg) { return chalk.red("[-] " + msg); },     // -1
+		function(msg) { return chalk.yellow("[!] " + msg); },  //  0
+		function(msg) { return chalk.cyan("[*] " + msg); },    //  1
+		function(msg) { return chalk.magenta("[*] " + msg); }, //  2
+		function(msg) { return ("[*] " + msg); },              //  3
+		function(msg) { return chalk.inverse("[*] " + msg); }, //  4
+		function(msg) { return chalk.green("[+] " + msg); }    //  5
 	];
 	var outputtedMsg = output[type + 2];
 	if (type < 0 ) {
