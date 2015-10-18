@@ -66,7 +66,7 @@ io.on('connection', function(socket){
 	var user = initUser(socket);
 	users[user.uin] = user;
 	socket.on("location", function(coords) {
-		serverLog(1, "coords passed: " + coords);
+		serverLog(1, "coords passed length: " + Object.keys(coords).length);
 		if (coords) {
 			for (var key in coords) {
 				serverLog(-2, "coords[" + key + "]: " + coords[key]);
