@@ -54,6 +54,10 @@ app.get("/loading", function(req, res) {
 	res.sendFile(__dirname + "/view/loading.html");
 });
 
+app.get('/chat', function(req, res) {
+	res.sendFile(__dirname + "/view/chat.html");
+});
+
 /****************************** EVENT HANDLERS *******************************/
 
 io.on('connection', function(socket){

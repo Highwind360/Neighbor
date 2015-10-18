@@ -14,11 +14,8 @@ webrtc.on('readyToCall', function() {
 webrtc.on('videoAdded', function (video, peer) {
 	var remotes = document.getElementById('remoteVideo');
 	if(remotes) {
-		var container = document.createElement('div');
-		container.className = 'videoContainer';
-		container.id = 'container_' + webrtc.getDomId(peer);
-		container.appendChild(video);
-		remotes.appendChild(container);
+		video.id = 'container_' + webrtc.getDomId(peer);
+		remotes.appendChild(video);
 	}
 });
 

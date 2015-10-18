@@ -1,10 +1,22 @@
 #leftBar{
-	width: 20%;
+	width: 80%;
 	background-color: #bbbbbb;
+}
+
+html, body, #chatBottom, #chatTop, #rightBar, #leftBar, #localVideo, #remoteVideo, #remoteVideo video{
 	height: 100%;
 }
 
-html, body{
+#localVideo, #remoteVideo{
+	width: 100%;
+}
+
+#remoteVideo video, #localVideo video{
+	width: 100%;
+	margin: auto;
+}
+
+#localVideo video{
 	height: 100%;
 }
 
@@ -12,13 +24,12 @@ html, body{
 	list-style: none;
 }
 
-#messages:nth-child(even){
+#messages li:nth-child(even){
 	background-color: #dddddd;
 }
 
 #rightBar{
-	width: 80%;
-	height: 100%;
+	width: 20%;
 }
 
 #rightBar, #leftBar{

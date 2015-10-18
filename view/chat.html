@@ -1,43 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<!-- Required meta tags always come first -->
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta http-equiv="x-ua-compatible" content="ie=edge">
+<head>
+	<!-- Required meta tags always come first -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
 
-		<!-- Bootstrap CSS -->
-		<link type="text/css" rel="stylesheet" href="https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/css/bootstrap.css">
-		<link type="text/css" rel="stylesheet" href="/css/chat.css">
+	<!-- Bootstrap CSS -->
+	<link type="text/css" rel="stylesheet" href="https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/css/bootstrap.css">
+	<link type="text/css" rel="stylesheet" href="/css/chat.css">
 
-		<!-- jQuery first, then Bootstrap JS. -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-		<script src="https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/js/bootstrap.js"></script>
-		<script src="/socket.io/socket.io.js"></script>
-		<script type="text/javascript" src="/scripts/chat.js"></script>
-		<script src="http://simplewebrtc.com/latest.js"></script>
-		<script type="text/javascript" src="/scripts/rtc.js"></script>
-	</head>
-	<body>
+	<!-- jQuery first, then Bootstrap JS. -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script src="https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/js/bootstrap.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="/scripts/chat.js"></script>
+	<script src="http://simplewebrtc.com/latest.js"></script>
+	<script type="text/javascript" src="/scripts/rtc.js"></script>
+</head>
+<body>
+
+	<div id="chatTop">
 		<div id="leftBar">
 			<!-- Info/profile bar -->
+			<div id="remoteVideo"></div>
 		</div>
 
 		<div id="rightBar">
-			<div id="chatTop">
-				<!-- Video chat -->
-				<div id="localVideo"></div>
-				<div id="remoteVideo"></div>
-			</div>
-
-			<div id="chatBottom">
-				<!-- Text chat -->
-				<ul id="messages">
-					<li>placeholder msg 1</li>
-					<li>placeholder 2</li>
-					<li>placeholder text 3</li>
-				</ul>
-			</div>
+			<!-- Video chat -->
+			<div id="localVideo"></div>
 		</div>
-	</body>
+	</div>
+
+	<div id="chatBottom">
+		<!-- Text chat -->
+		<ul id="messages">
+			<li>placeholder msg 1</li>
+			<li>placeholder 2</li>
+			<li>placeholder text 3</li>
+		</ul>
+	</div>
+
+</body>
 </html>
