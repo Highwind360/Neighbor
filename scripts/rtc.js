@@ -7,7 +7,7 @@ var webrtc = new SimpleWebRTC({
 
 // note: 'coolroom' is the room being joined
 webrtc.on('readyToCall', function() {
-	webrtc.joinRoom('coolroom');
+	webrtc.joinRoom(room);
 });
 
 // whenever a user joins the room, adds them to remoteVideo div
