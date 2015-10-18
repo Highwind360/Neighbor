@@ -24,7 +24,7 @@ webrtc.on('videoAdded', function (video, peer) {
 	vol.max = -20;
 	vol.low = -40;
 	vol.high = -25;
-	container.appendChild(vol);
+	document.getElementById('localVideo').appendChild(vol);
 });
 
 // whenever a user leaves the room, removes them from remoteVideo div and

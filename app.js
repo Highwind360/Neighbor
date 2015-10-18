@@ -108,7 +108,10 @@ function match(userObj) {
 	if (closest_dist < 0) {
 		return null;
 	} else {
-		"uuid": guid(),
+		rooms[guid()] = {
+			"user1": userObj,
+			"user2": closest_user
+		};
 		userObj.connectedTo = key;  // TODO: trigger an event when someone wants to move on to another person
 		return closest_user;
 	}
