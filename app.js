@@ -42,6 +42,7 @@ http.listen(8080, function(){
 });
 
 var users = [];
+var rooms = {};
 
 /********************************** ROUTING **********************************/
 
@@ -49,19 +50,22 @@ app.get('/', function(req, res) {
 	res.sendFile(__dirname + "/view/index.html");
 });
 
+app.get("/loading", function(req, res) {
+	res.sendFile(__dirname + "/view/loading.html");
+});
+
 /****************************** EVENT HANDLERS *******************************/
 
 io.on('connection', function(socket){
-	console.log('user connected');
+	serverLog(1, "user connected");
 	socket.on("location", function(position) {
 		if (position.coords) {
-			var lat = position.coords.latitude;
-			var lon = position.coords.longitude;
 			var userObj = {};
 			userObj[socket] = {
-				"lat": lat,
-				"lon": lon,
+				"lat": position.coords.latitude,
+				"lon": position.coords.longitude,
 				"connectedTo": null,
+				"uuid": guid(),
 				"searchStart": Date.now()
 			};
 			users.push(userObj);
@@ -69,11 +73,12 @@ io.on('connection', function(socket){
 		}
 	});
 	socket.on("chat message", function(content) {
-		console.log("content: " + content);
+		serverLog(2, "content: " + content);
 		io.emit("chat message", content);
 	});
 	socket.on("disconnect", function() {
 		console.log("user disconnected");
+		serverLog(1, "user disconnected");
 	});
 });
 
@@ -90,7 +95,8 @@ function match(userObj) {
 	Object.keys(obj).forEach(function(key) {
 		if (users[key].connectedTo === null) {
 			var dist = coordDistance(userObj.lat, userObj.lon, users[key].lat, users[key].lon);
-			if (dist < closest_dist) {  // TODO: better checking of negative (can't have negative distance)
+			if (dist < closest_dist || ((closest_dist < 0) && dist > closest_dist)) { 
+				// TODO: better checking of negative (can't have negative distance)
 				closest_dist = dist;
 				closest_user = users[key];
 			}

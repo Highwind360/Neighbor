@@ -1,0 +1,14 @@
+div#mainBody {
+	width: 600px;
+	text-align: center;
+	margin: 0px auto;
+	margin-top: 200px;
+}
+
+h1 {
+	font-family: 'Verdana', sans-serif;
+}
+
+h1 {
+	color: #009bff;
+}
