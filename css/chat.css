@@ -1,6 +1,14 @@
+ul{
+	padding: 10px 10px;
+}
+
 #leftBar{
 	width: 80%;
 	background-color: #bbbbbb;
+}
+
+body{
+	background-color: #b3e5ff;
 }
 
 html, body, #chatBottom, #chatTop, #rightBar, #leftBar, #localVideo, #remoteVideo, #remoteVideo video{
@@ -28,10 +36,11 @@ html, body, #chatBottom, #chatTop, #rightBar, #leftBar, #localVideo, #remoteVide
 
 #messages{
 	list-style: none;
+	height: 80%;
 }
 
 #messages li:nth-child(even){
-	background-color: #dddddd;
+	background-color: #8ad7ff;
 }
 
 #rightBar{
@@ -49,13 +58,21 @@ html, body, #chatBottom, #chatTop, #rightBar, #leftBar, #localVideo, #remoteVide
 }
 
 #chatBottom{
-	height: 40%;
-	background-color: #8888ff;
+	height: 35%;
 	font-family: Verdana, sans-serif;
 }
 
-#chatBottom, #leftBar, #rightBar{
-	overflow: scroll;
+#chatInput{
+	font-family: Verdana, sans-serif;
+}
+
+#chatBottom{
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+#chatBottom, #msg, #chatInput{
+	background-color: #b3e5ff;
 }
 
 button#nextRoom {
@@ -74,4 +91,29 @@ button#nextRoom {
 	font-weight: 500;
 	font-size: 15px;
 	font-family: Verdana, sans-serif;
+}
+
+button#msgSend {
+	position: absolute;
+	right: 0px;
+	cursor: pointer;
+	background-color: #009bff;
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+	border-radius: 0px;
+	border: none;
+	width: 10%;
+	color: #ffffff;
+	font-family: Verdana, sans-serif;
+}
+
+#msg input {
+	width: 88%;
+}
+
+#msg {
+	position: relative;
+	height: 100%;
+	width: 90%;
+	margin: auto;
 }

@@ -2,8 +2,8 @@ var socket = io();
 
 window.onload = function() {
 	$("#msg").submit(function() {
-		socket.emit("chat message", $("#m").val());
-		$("#m").val("");
+		socket.emit("chat message", $("#msgBox").val());
+		$("#msgBox").val("");
 		return false;
 	});
 	socket.on("chat message", recieveChat);
