@@ -66,25 +66,24 @@ io.on('connection', function(socket){
 	socket.on("location", function(position) {
 		if (position.coords) {
 			var userObj = {};
-			userObj[socket] = {
+			userObj[socket.id] = {
 				"lat": position.coords.latitude,
 				"lon": position.coords.longitude,
 				"connectedTo": null,
 				"searchStart": Date.now()
 			};
 			users.push(userObj);
-			var matched_user = match(userObj);
-			if (matched_user) {
-				io.sockets.socket(socket.id).emit("matched", userObj.connectedTo);
-				io.sockets.socket(matched_user).emit("matched", users[matched_user].connectedTo);
-			} else {
-				io.sockets.socket(socket.id).emit("notMatched");
-			}
+			matchmaker(userObj);
 		}
 	});
+	socket.on("next", function(currentRoomId) {
+		
+	});
 	socket.on("chat message", function(content) {
-		serverLog(2, "content: " + content);
-		io.emit("chat message", content);
+		if (content.trim()) {
+			serverLog(2, "content: " + content);
+			io.emit("chat message", content);
+		}
 	});
 	socket.on("disconnect", function() {
 		console.log("user disconnected");
@@ -129,6 +128,19 @@ function match(userObj) {
 
 /**************************** HELPER FUNCTIONS ******************************/
 
+
+function matchmaker(userObj) {
+	var matched_user = match(userObj);
+	if (matched_user) {
+		io.sockets.socket(socket.id).emit("matched", userObj.connectedTo);
+		io.sockets.socket(matched_user).emit("matched", users[matched_user].connectedTo);
+		matched_users[matched_user] = users[matched_user];
+		matched_users[userObj] = users[userObj];
+	} else {
+		io.sockets.socket(socket.id).emit("notMatched");
+	}
+}
+
 /*
  *	Determines distance between two coordinate points
  */ 
@@ -143,6 +155,14 @@ function coordDistance(lat1, lon1, lat2, lon2) {
 		Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2);
 	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 	return R * c;
+}
+
+function guid() {
+	function s4() {
+		return Math.floor((1 + Math.random()) * 0x10000) .toString(16) .substring(1);
+	}
+	return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+			s4() + '-' + s4() + s4() + s4();
 }
 
 /*
