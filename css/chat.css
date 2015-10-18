@@ -51,6 +51,7 @@ html, body, #chatBottom, #chatTop, #rightBar, #leftBar, #localVideo, #remoteVide
 #chatBottom{
 	height: 40%;
 	background-color: #8888ff;
+	font-family: Verdana, sans-serif;
 }
 
 #chatBottom, #leftBar, #rightBar{
@@ -72,5 +73,5 @@ button#nextRoom {
 	color: #ffffff;
 	font-weight: 500;
 	font-size: 15px;
-	font-family: Verdana;
+	font-family: Verdana, sans-serif;
 }
