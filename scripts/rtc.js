@@ -36,3 +36,14 @@ webrtc.on('videoRemoved', function (video, peer) {
 	}
 });
 
+webrtc.on('message', function(data) {
+	if(data.type === 'chat') {
+		console.log(data);		
+	}
+});
+
+$('#msgSend').click(function(){
+	var msg = $('#msg').val();
+	webrtc.sendToAll('chat', {message: msg});
+	$('#msg').val('');
+});
