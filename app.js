@@ -81,12 +81,11 @@ io.on('connection', function(socket){
 	});
 	socket.on("next", function(currentRoomId) {
 		serverLog(1, "next button pressed");
-		var uin = null;
-		if (rooms[currentRoomId].user1.sock === socket) {
-			uin = users[rooms[currentRoomId].user1].uin;
-		} else {
-			uin = users[rooms[currentRoomId].user2].uin;
-		}
+		var uin = users[rooms[currentRoomId].user1].uin;
+		users[uin].mms = Date.now();
+		users[uin].qInd = queue.length - 1;
+		matchmaker(users[uin]);
+		uin = users[rooms[currentRoomId].user2].uin;
 		users[uin].mms = Date.now();
 		users[uin].qInd = queue.length - 1;
 		matchmaker(users[uin]);
