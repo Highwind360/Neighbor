@@ -59,8 +59,8 @@ html, body, #chatBottom, #chatTop, #rightBar, #leftBar, #localVideo, #remoteVide
 
 button#nextRoom {
 	position: absolute;
-	right: 10px;
-	bottom: 10px;
+	right: 20px;
+	bottom: 20px;
 	cursor: pointer;
 	background-color: #009bff;
 	-moz-border-radius: 0px;
