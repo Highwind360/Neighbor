@@ -22,11 +22,13 @@ http.listen(8080, function(){
 });
 
 /********************************** ROUTING **********************************/
+
 app.get('/', function(req, res) {
 	res.sendFile(__dirname + "/view/index.html");
 });
 
 /****************************** EVENT HANDLERS *******************************/
+
 io.on('connection', function(socket){
 	console.log('user connected');
 	socket.on("chat message", function(content) {
@@ -53,26 +55,50 @@ function permitAccessTo(path) {
 }
 
 function serverLog(type, message, extra) {
+	var okay = true;
 	if (typeof type !== "number") {
 		badType("serverLog", type, "number");
+		okay = false;
 	}
 	if (typeof message !== "string") {
 		badType("serverLog", message, "string");
+		okay = false;
 	}
-	if (type > 0) {
-
-	} else if (type === 0) {
-
-	} else if (type < 0) {
-		if (type === -1) {
-			chalk.red(message);
-		} else if (type === -2) {
-			chalk.bgRed(message);
-		}
-	}
-
+	var output = [
+		function(msg) { return chalk.bgRed(msg); },   // -2 
+		function(msg) { return chalk.red(msg); },     // -1
+		function(msg) { return chalk.yellow(msg); },  //  0
+		function(msg) { return chalk.cyan(msg); },    //  1
+		function(msg) { return chalk.magenta(msg); }, //  2
+		function(msg) { return (msg); },              //  3
+		function(msg) { return chalk.inverse(msg); }, //  4
+		function(msg) { return chalk.green(msg); }    //  5
+	];
+	console.log(output[type + 2]);
 }
 
+function warn(message) {
+	serverLog(0, message);
+}
+
+function minorError(message) {
+	serverLog(-1, message);
+}
+
+/*
+ *	Call me if a problem requires breaking the program
+ */
+function majorError(message) {
+	serverLog(-2, message);
+	if (message instanceof Error) {
+		message = Error(message);
+	} 
+	
+}
+
+/*
+ *	Call me if someone passed a bad variable type to your function
+ */
 function badType(fName, thing, expected) {
 	var blah = fName + " type mismatch; a " + typeof thing + " was provided ";
 	blah += "-- expected a " + expected;
