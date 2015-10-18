@@ -73,7 +73,13 @@ io.on('connection', function(socket){
 				"searchStart": Date.now()
 			};
 			users.push(userObj);
-			var pair = match(userObj);
+			var matched_user = match(userObj);
+			if (matched_user) {
+				io.sockets.socket(socket.id).emit("matched", userObj.connectedTo);
+				io.sockets.socket(matched_user).emit("matched", users[matched_user].connectedTo);
+			} else {
+				io.sockets.socket(socket.id).emit("notMatched");
+			}
 		}
 	});
 	socket.on("chat message", function(content) {
@@ -109,8 +115,14 @@ function match(userObj) {
 	if (closest_dist < 0) {
 		return null;
 	} else {
-		"uuid": guid(),
-		userObj.connectedTo = key;  // TODO: trigger an event when someone wants to move on to another person
+		var roomID = guid();
+		userObj.connectedTo = roomID;
+		users[closest_user].connectedTo = roomID;
+		rooms[roomID] = {
+			"user1": userObj,
+			"user2": users[closest_user]
+		}
+		// TODO: trigger an event when someone wants to move on to another person
 		return closest_user;
 	}
 }
