@@ -8,4 +8,8 @@ window.onload = function(){
 		});
 		window.location.assign("/loading");
 	});
+
+	socket.on("match", function(roomId) {
+		console.log("motched with room id: " + roomId);
+	});
 };
