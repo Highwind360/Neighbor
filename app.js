@@ -42,6 +42,7 @@ http.listen(8080, function(){
 });
 
 var users = [];
+var matched_users = [];
 var rooms = {};
 
 /********************************** ROUTING **********************************/
@@ -101,17 +102,14 @@ function match(userObj) {
 			if (dist < closest_dist || ((closest_dist < 0) && dist > closest_dist)) { 
 				// TODO: better checking of negative (can't have negative distance)
 				closest_dist = dist;
-				closest_user = users[key];
+				closest_user = key;
 			}
 		}
 	});
 	if (closest_dist < 0) {
 		return null;
 	} else {
-		rooms[guid()] = {
-			"user1": userObj,
-			"user2": closest_user
-		};
+		"uuid": guid(),
 		userObj.connectedTo = key;  // TODO: trigger an event when someone wants to move on to another person
 		return closest_user;
 	}
