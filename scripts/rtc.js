@@ -43,7 +43,7 @@ webrtc.on('message', function(data) {
 });
 
 $('#msgSend').click(function(){
-	var msg = $('#msg').val();
+	var msg = $('#msgBox').val();
 	webrtc.sendToAll('chat', {message: msg});
-	$('#msg').val('');
+	$('#msgBox').val('');
 });
