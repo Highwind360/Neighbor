@@ -146,17 +146,17 @@ function initUser(sock) {
 /**************************** HELPER FUNCTIONS ******************************/
 
 
-function matchmaker(userObj, uid) {
+function matchmaker(userObj) {
 	var matched_user = match(userObj);
 	if (matched_user) {
 		serverLog(3, "emitting roomID");
-		io.sockets.connected[userObj.sock].emit("matched", users[userObj.uin].room);
-		io.sockets.connected[matched_user.sock].emit("matched", matched_user.room);
+		io.sockets.connected[userObj.sock.id].emit("matched", users[userObj.uin].room);
+		io.sockets.connected[matched_user.sock.id].emit("matched", matched_user.room);
 		matched_users[matched_user] = users[matched_user];
 		matched_users[userObj] = users[userObj];
 	} else {
 		serverLog(0, "no matches");
-		io.sockets.connected[userObj.sock].emit("notMatched");
+		io.sockets.connected[userObj.sock.id].emit("notMatched");
 	}
 }
 
