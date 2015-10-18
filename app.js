@@ -141,7 +141,6 @@ function initUser(sock) {
 		"room": null,  // roomID
 		"sock": sock,   // user's socket
 		"qInd": null
-		"n": null
 	};
 }
 
