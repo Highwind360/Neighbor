@@ -69,7 +69,6 @@ io.on('connection', function(socket){
 				"lat": position.coords.latitude,
 				"lon": position.coords.longitude,
 				"connectedTo": null,
-				"uuid": guid(),
 				"searchStart": Date.now()
 			};
 			users.push(userObj);
@@ -109,6 +108,7 @@ function match(userObj) {
 	if (closest_dist < 0) {
 		return null;
 	} else {
+		"uuid": guid(),
 		userObj.connectedTo = key;  // TODO: trigger an event when someone wants to move on to another person
 		return closest_user;
 	}
