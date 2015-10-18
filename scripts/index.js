@@ -1,12 +1,8 @@
-(function() {
-	var socket = io();
+var socket = io();
 
-	window.onload = function(){
-		var startChatButton = $("#startChat");
-		startChatButton.onclick = startChat;
-	};
-
-	function startChat(){
+window.onload = function(){
+	$("#startChat").click(function(){
+		alert("hi");
 		socket.emit("location", null);
-	}
-});
+	});
+};
