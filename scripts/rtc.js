@@ -20,14 +20,7 @@ webrtc.on('videoAdded', function (video, peer) {
 		video.id = 'container_' + webrtc.getDomId(peer);
 		remotes.appendChild(video);
 	}
-	var vol = document.createElement('meter');
-	vol.id = 'volume_' + peer.id;
-	vol.className = 'volume';
-	vol.min = -45;
-	vol.max = -20;
-	vol.low = -40;
-	vol.high = -25;
-	document.getElementById('localVideo').appendChild(vol);
+
 });
 
 // whenever a user leaves the room, removes them from remoteVideo div and
@@ -43,13 +36,3 @@ webrtc.on('videoRemoved', function (video, peer) {
 	}
 });
 
-function showVolume(el, volume) {
-	if (!el) return;
-	if (volume < -45) volume = -45;
-	if (volume > -20) volume = -20;
-	el.value = volume;
-}
-
-webrtc.on('volumeChange', function(volume, threshold) {
-	showVolume(document.getElementById('localVolume'), volume);
-});
