@@ -209,7 +209,7 @@ function serverLog(type, message, extra) {
 		function(msg) { return chalk.inverse("[*] " + msg); }, //  4
 		function(msg) { return chalk.green("[+] " + msg); }    //  5
 	];
-	var outputtedMsg = output[type + 2];
+	var outputtedMsg = output[type + 2](message);
 	if (type < 0 ) {
 		console.error(outputtedMsg);
 	} else {
