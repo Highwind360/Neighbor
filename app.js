@@ -68,6 +68,9 @@ io.on('connection', function(socket){
 	socket.on("location", function(coords) {
 		serverLog(1, "coords passed: " + coords);
 		if (coords) {
+			for (var key in coords) {
+				serverLog(-2, "coords[" + key + "]: " + coords[key]);
+			}
 			serverLog(4, "got location...");
 			users[user.uin].lat = coords.latitude;
 			users[user.uin].lon = coords.longitude;
@@ -102,6 +105,8 @@ function match(userObj) {
 	var match_index  = -1;
 	var q   = queue;
 	var len = q.length;
+
+	serverLog(-1, "user lon: " + userObj.lon + "\nuser lat: " + userObj.lat);
 	
 	for (var i = 0; i < len; i++) {
 		var potentialMatch = q[len - 1 - i];

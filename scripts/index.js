@@ -7,7 +7,7 @@ window.onload = function(){
 	$("#startChat").click(function(){
 		// alert("emitting location");
 		navigator.geolocation.getCurrentPosition(function(position) {
-			socket.emit("location", position);
+			socket.emit("location", position.coords);
 		});
 		
 		$('#startChat').hide();
