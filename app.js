@@ -63,19 +63,19 @@ app.get('/chat', function(req, res) {
 
 io.on('connection', function(socket){
 	serverLog(5, "user connected");
-	socket.on("location", function(position) {
-		serverLog(1, "position passed: " + position + "\nposition.coords: " + position.coords);
-		if (position.coords) {
+	socket.on("location", function(coords) {
+		serverLog(1, "coords passed: " + coords);
+		if (coords) {
 			serverLog(4, "got location...");
 			var userObj = {};
 			userObj[socket.id] = {
-				"lat": position.coords.latitude,
-				"lon": position.coords.longitude,
+				"lat": coords.latitude,
+				"lon": coords.longitude,
 				"connectedTo": null,
 				"searchStart": Date.now()
 			};
 			users.push(userObj);
-			matchmaker(userObj);
+			matchmaker(userObj, socket.id);
 		}
 	});
 	socket.on("next", function(currentRoomId) {
@@ -133,17 +133,17 @@ function match(userObj) {
 /**************************** HELPER FUNCTIONS ******************************/
 
 
-function matchmaker(userObj) {
+function matchmaker(userObj, uid) {
 	var matched_user = match(userObj);
 	if (matched_user) {
 		serverLog(3, "emitting roomID");
-		io.sockets.socket(socket.id).emit("matched", userObj.connectedTo);
-		io.sockets.socket(matched_user).emit("matched", users[matched_user].connectedTo);
+		io.sockets.connected[uid].emit("matched", userObj.connectedTo);
+		io.sockets.connected[matched_user].emit("matched", users[matched_user].connectedTo);
 		matched_users[matched_user] = users[matched_user];
 		matched_users[userObj] = users[userObj];
 	} else {
 		serverLog(0, "no matches");
-		io.sockets.socket(socket.id).emit("notMatched");
+		io.sockets.connected[uid].emit("notMatched");
 	}
 }
 
