@@ -8,7 +8,8 @@ window.onload = function() {
 	});
 	socket.on("chat message", recieveChat);
 	$("#nextRoom").click(function() {
-		socket.emit("next", null);
+		var roomID = window.location.search.match(/room=(.*)/)[1];
+		socket.emit("next", roomID);
 	});
 };
 
