@@ -13,6 +13,9 @@ webrtc.on('readyToCall', function() {
 // whenever a user joins the room, adds them to remoteVideo div
 webrtc.on('videoAdded', function (video, peer) {
 	var remotes = document.getElementById('remoteVideo');
+	while(remotes.firstChild) {
+		remotes.removeChild(remotes.firstChild);
+	}
 	if(remotes) {
 		video.id = 'container_' + webrtc.getDomId(peer);
 		remotes.appendChild(video);
@@ -31,12 +34,13 @@ webrtc.on('videoAdded', function (video, peer) {
 // displays a leave message
 webrtc.on('videoRemoved', function (video, peer) {
 	var remotes = document.getElementById('remoteVideo');
-	var el = document.getElementById(peer ? 'container_' + webrtc.getDomId(peer) : 
-		'localScreenContainer');
+	var target = 'container_' + webrtc.getDomId(peer);
+	console.log("attempting to delete id " + target);
+	var el = document.getElementById(target);
 	if(remotes && el) {
 		el.removeChild(video);
 		var mesg = document.createElement('p');
-		mesg.classList.add("disconnect-mesg");
+		mesg.id = "disconnect-mesg";
 		mesg.textContent = "User disconnected";
 		el.appendChild(mesg);
 	}
