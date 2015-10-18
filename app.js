@@ -11,9 +11,10 @@ var io = require('socket.io')(http);
 var logger = require("morgan");
 var chalk = require("chalk");
 
-permitAccessTo("/css");
-permitAccessTo("/scripts");
-permitAccessTo("/view");
+permitAccessTo("css");
+permitAccessTo("scripts");
+permitAccessTo("view");
+permitAccessTo("images");
 
 app.use(logger("dev")); // enable logging
 
@@ -25,10 +26,6 @@ http.listen(8080, function(){
 
 app.get('/', function(req, res) {
 	res.sendFile(__dirname + "/view/index.html");
-});
-
-app.get('/createRoom', function(req, res) {
-	
 });
 
 /****************************** EVENT HANDLERS *******************************/
@@ -47,17 +44,24 @@ io.on('connection', function(socket){
 
 /**************************** HELPER FUNCTIONS ******************************/
 
+/*
+ *	Adds access to a given directory to be able to be "GETted"
+ */
 function permitAccessTo(path) {
 	if (typeof path === "string") {
-		// if (!path.startsWith("/")) {
-		// 	path = "/" + path;
-		// }
+		if (!path.startsWith("/")) {
+			path = "/" + path;
+		}
 		app.use(path, express.static(__dirname + path));
 	} else {
-		serverLog(-1, "permitAccessTo() requires a string argument; you provided a(n) " + typeof path);
+		badType("permitAccessTo", path, "string");
 	}
 }
 
+/*
+ *	Use me to create awesome logs
+ *	TODO: use extra if it exists
+ */
 function serverLog(type, message, extra) {
 	var okay = true;
 	if (typeof type !== "number") {
@@ -78,13 +82,24 @@ function serverLog(type, message, extra) {
 		function(msg) { return chalk.inverse(msg); }, //  4
 		function(msg) { return chalk.green(msg); }    //  5
 	];
-	console.log(output[type + 2]);
+	var outputtedMsg = output[type + 2];
+	if (type < 0 ) {
+		console.error(outputtedMsg);
+	} else {
+		console.log(outputtedMsg);
+	}
 }
 
+/*
+ *	Call me if there is a warning but not an error
+ */
 function warn(message) {
 	serverLog(0, message);
 }
 
+/*
+ *	Call me if there was a problem but you don't need to kill the server.
+ */ 
 function minorError(message) {
 	serverLog(-1, message);
 }
@@ -94,10 +109,11 @@ function minorError(message) {
  */
 function majorError(message) {
 	serverLog(-2, message);
-	if (message instanceof Error) {
+	if (!(message instanceof Error)) {
 		message = Error(message);
 	} 
-	
+	message.stack();
+	throw message;
 }
 
 /*
