@@ -22,6 +22,6 @@ window.onload = function(){
 
 	socket.on("matched", function(roomId) {
 		console.log("found a match. Matching with room id: " + roomId);
-		window.location.replace("/chat");
+		window.location.replace("/chat?room=" + roomId);
 	});
 };

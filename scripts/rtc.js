@@ -7,7 +7,7 @@ var webrtc = new SimpleWebRTC({
 
 // note: 'coolroom' is the room being joined
 webrtc.on('readyToCall', function() {
-	webrtc.joinRoom('coolroom');
+	webrtc.joinRoom(getURLParameter("room"));
 });
 
 // whenever a user joins the room, adds them to remoteVideo div
@@ -47,3 +47,7 @@ $('#msg').submit(function(){
 	webrtc.sendToAll('chat', {data: msg});
 	$('#msgBox').val('');
 });
+
+function getURLParameter(name) {
+  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
+}
