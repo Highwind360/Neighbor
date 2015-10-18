@@ -64,8 +64,8 @@ app.get('/chat', function(req, res) {
 io.on('connection', function(socket){
 	serverLog(5, "user connected");
 	socket.on("location", function(position) {
-		serverLog(4, "got location...");
 		if (position.coords) {
+			serverLog(4, "got location...");
 			var userObj = {};
 			userObj[socket.id] = {
 				"lat": position.coords.latitude,
@@ -102,7 +102,7 @@ function match(userObj) {
 	var closest_user;
 	var closest_dist = -1; // initialize to negative distance -- i.e. impossible value
 	
-	Object.keys(obj).forEach(function(key) {
+	Object.keys(users).forEach(function(key) {
 		if (users[key].connectedTo === null) {
 			var dist = coordDistance(userObj.lat, userObj.lon, users[key].lat, users[key].lon);
 			if (dist < closest_dist || ((closest_dist < 0) && dist > closest_dist)) { 
