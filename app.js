@@ -72,7 +72,6 @@ io.on('connection', function(socket){
 			users[user.uin].lat = coords.latitude;
 			users[user.uin].lon = coords.longitude;
 			users[user.uin].mms = Date.now();
-			queue.push(users[user.uin]);
 			users[user.uin].qInd = queue.length - 1;
 			matchmaker(users[user.uin]);
 		}
@@ -102,8 +101,7 @@ function match(userObj) {
 	var closest_dist = -1; // initialize to negative distance -- i.e. impossible value
 	var match_index  = -1;
 	var q   = queue;
-	delete q[userObj.qInd];
-	var len = queue.length;
+	var len = q.length;
 	
 	for (var i = 0; i < len; i++) {
 		var potentialMatch = q[len - 1 - i];
@@ -118,6 +116,7 @@ function match(userObj) {
 	}
 	if (closest_dist < 0) {
 		serverLog(0, "no users found");
+		queue.push(users[user.uin]);
 		return null;
 	} else {
 		var roomID = guid();
