@@ -1,3 +1,6 @@
 fix-permissions.sh
-*.swp
+.*.sw*
+*.bak
+*.bck
 /node_modules
+

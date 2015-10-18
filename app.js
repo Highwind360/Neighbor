@@ -53,8 +53,8 @@ io.on('connection', function(socket){
 		};
 		match(users[socket]);
 	});
-	socket.on("chat message", function(content) {
-		console.log("content: " + content);
+	socket.on("message", function(content) {
+		serverLog(1, 
 		io.emit("chat message", content);
 	});
 	socket.on("disconnect", function() {
@@ -97,21 +97,24 @@ function serverLog(type, message, extra) {
 		badType("serverLog", message, "string");
 		okay = false;
 	}
-	var output = [
-		function(msg) { return chalk.bgRed(msg); },   // -2 
-		function(msg) { return chalk.red(msg); },     // -1
-		function(msg) { return chalk.yellow(msg); },  //  0
-		function(msg) { return chalk.cyan(msg); },    //  1
-		function(msg) { return chalk.magenta(msg); }, //  2
-		function(msg) { return (msg); },              //  3
-		function(msg) { return chalk.inverse(msg); }, //  4
-		function(msg) { return chalk.green(msg); }    //  5
-	];
-	var outputtedMsg = output[type + 2];
-	if (type < 0 ) {
-		console.error(outputtedMsg);
-	} else {
-		console.log(outputtedMsg);
+	if (okay) {
+		var output = [
+			function(msg) { return chalk.bgRed(msg); },   // -2 
+			function(msg) { return chalk.red(msg); },     // -1
+			function(msg) { return chalk.yellow(msg); },  //  0
+			function(msg) { return chalk.cyan(msg); },    //  1
+			function(msg) { return chalk.magenta(msg); }, //  2
+			function(msg) { return (msg); },              //  3
+			function(msg) { return chalk.inverse(msg); }, //  4
+			function(msg) { return chalk.green(msg); }    //  5
+		];
+		type = type % output.length;
+		var outputtedMsg = output[type + 2];
+		if (type < 0 ) {
+			console.error(outputtedMsg);
+		} else {
+			console.log(outputtedMsg);
+		}
 	}
 }
 
