@@ -20,8 +20,13 @@ button#startChat {
 	font-size: 15px;
 }
 
+img#logo {
+	height: 350px;
+	width: 350px;
+}
+
 h1, button#startChat{
-	font-family: 'Verdana', sans-serif;
+	font-family: Verdana, sans-serif;
 }
 
 h1{
