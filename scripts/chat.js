@@ -13,8 +13,10 @@ window.onload = function() {
 	});
 };
 
+
 function recieveChat(content) {
 	var node = document.createTextNode(content);
 	var msg = document.createElement("li");
-	$("#messages").appendChild(msg).appendChild(node);
+	msg.appendChild(node);
+	document.getElementById("messages").appendChild(msg);
 };
