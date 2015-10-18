@@ -1,0 +1,28 @@
+#leftBar{
+	width: 20%;
+	background-color: #bbbbbb;
+	height: 100%;
+}
+
+html, body{
+	height: 100%;
+}
+
+#rightBar{
+	width: 80%;
+	height: 100%;
+}
+
+#rightBar, #leftBar{
+	float: left;
+}
+
+#chatTop{
+	background-color: #333333;
+	height: 60%;
+}
+
+#chatBottom{
+	height: 40%;
+	background-color: #8888ff;
+}
