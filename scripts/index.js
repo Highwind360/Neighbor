@@ -1,5 +1,4 @@
 var socket = io();
-var room = null;
 
 window.onload = function(){
 	$("#loadingIcon").hide();
@@ -23,7 +22,6 @@ window.onload = function(){
 
 	socket.on("matched", function(roomId) {
 		console.log("found a match. Matching with room id: " + roomId);
-		room = roomId;
-		window.location.replace("/chat");
+		window.location.replace("/chat?room=" + roomId);
 	});
 };
