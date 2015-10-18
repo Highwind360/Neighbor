@@ -116,7 +116,7 @@ function match(userObj) {
 	}
 	if (closest_dist < 0) {
 		serverLog(0, "no users found");
-		queue.push(users[user.uin]);
+		queue.push(users[userObj.uin]);
 		return null;
 	} else {
 		var roomID = guid();
@@ -156,7 +156,7 @@ function matchmaker(userObj, uid) {
 		matched_users[userObj] = users[userObj];
 	} else {
 		serverLog(0, "no matches");
-		io.sockets.connected[uid].emit("notMatched");
+		io.sockets.connected[userObj.sock].emit("notMatched");
 	}
 }
 
