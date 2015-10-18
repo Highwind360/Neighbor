@@ -11,6 +11,16 @@ var io = require('socket.io')(http);
 var logger = require("morgan");
 var chalk = require("chalk");
 
+/*
+ *	String.startsWith polyfill
+ */
+if (!String.prototype.startsWith) {
+	String.prototype.startsWith = function(searchString, position) {
+		position = position || 0;
+		return this.indexOf(searchString, position) === position;
+	};
+}
+
 permitAccessTo("css");
 permitAccessTo("scripts");
 permitAccessTo("view");
@@ -49,7 +59,7 @@ io.on('connection', function(socket){
  */
 function permitAccessTo(path) {
 	if (typeof path === "string") {
-		if (!strStartsWith(path, "/")) {
+		if (!path.startsWith("/")) {
 			path = "/" + path;
 		}
 		app.use(path, express.static(__dirname + path));
@@ -58,9 +68,6 @@ function permitAccessTo(path) {
 	}
 }
 
-function strStartsWith(str, prefix) {
-    return str.indexOf(prefix) === 0;
-}
 /*
  *	Use me to create awesome logs
  *	TODO: use extra if it exists
