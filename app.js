@@ -49,7 +49,7 @@ io.on('connection', function(socket){
  */
 function permitAccessTo(path) {
 	if (typeof path === "string") {
-		if (!path.startsWith("/")) {
+		if (!strStartsWith(path, "/")) {
 			path = "/" + path;
 		}
 		app.use(path, express.static(__dirname + path));
@@ -58,6 +58,9 @@ function permitAccessTo(path) {
 	}
 }
 
+function strStartsWith(str, prefix) {
+    return str.indexOf(prefix) === 0;
+}
 /*
  *	Use me to create awesome logs
  *	TODO: use extra if it exists
