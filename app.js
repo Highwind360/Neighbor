@@ -156,7 +156,7 @@ function matchmaker(userObj, uid) {
 		matched_users[userObj] = users[userObj];
 	} else {
 		serverLog(0, "no matches");
-		io.sockets.connected[uid].emit("notMatched");
+		io.sockets.connected[userObj.sock].emit("notMatched");
 	}
 }
 
