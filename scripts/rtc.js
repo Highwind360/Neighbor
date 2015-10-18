@@ -42,8 +42,8 @@ webrtc.on('message', function(data) {
 	}
 });
 
-$('#msgSend').click(function(){
+$('#msg').submit(function(){
 	var msg = $('#msgBox').val();
-	webrtc.sendToAll('chat', {message: msg});
+	webrtc.sendToAll('chat', {data: msg});
 	$('#msgBox').val('');
 });
