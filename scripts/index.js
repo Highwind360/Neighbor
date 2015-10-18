@@ -2,7 +2,9 @@ var socket = io();
 
 window.onload = function(){
 	$("#startChat").click(function(){
-		alert("hi");
-		socket.emit("location", null);
+		alert("emitting location");
+		navigator.geolocation.getCurrentPosition(function(position) {
+			socket.emit("location", position);
+		});
 	});
 };
