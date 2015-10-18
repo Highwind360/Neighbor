@@ -32,6 +32,8 @@ http.listen(8080, function(){
 	console.log('program listening on *:8080');
 });
 
+var users = {};
+
 /********************************** ROUTING **********************************/
 
 app.get('/', function(req, res) {
@@ -42,6 +44,15 @@ app.get('/', function(req, res) {
 
 io.on('connection', function(socket){
 	console.log('user connected');
+	socket.on("location", function(position) {
+		var lat = position.coords.latitude;
+		var lon = position.coords.longitude;
+		users[socket] = {
+			"lat": lat,
+			"lon": lon
+		};
+		match(users[socket]);
+	});
 	socket.on("chat message", function(content) {
 		console.log("content: " + content);
 		io.emit("chat message", content);
@@ -53,6 +64,10 @@ io.on('connection', function(socket){
 
 
 /**************************** HELPER FUNCTIONS ******************************/
+
+function match(userObj) {
+	// TODO: DANNNNNNNNNNNN
+}
 
 /*
  *	Adds access to a given directory to be able to be "GETted"
