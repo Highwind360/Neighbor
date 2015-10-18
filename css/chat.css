@@ -20,6 +20,12 @@ html, body, #chatBottom, #chatTop, #rightBar, #leftBar, #localVideo, #remoteVide
 	height: 100%;
 }
 
+#disconnect-mesg{
+	text-align: center;
+	height: 100%;
+	margin: auto;
+}
+
 #messages{
 	list-style: none;
 }

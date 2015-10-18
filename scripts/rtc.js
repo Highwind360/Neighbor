@@ -33,11 +33,8 @@ webrtc.on('videoAdded', function (video, peer) {
 // whenever a user leaves the room, removes them from remoteVideo div and
 // displays a leave message
 webrtc.on('videoRemoved', function (video, peer) {
-	var remotes = document.getElementById('remoteVideo');
-	var target = 'container_' + webrtc.getDomId(peer);
-	console.log("attempting to delete id " + target);
-	var el = document.getElementById(target);
-	if(remotes && el) {
+	var el = document.getElementById("remoteVideo");
+	if(el) {
 		el.removeChild(video);
 		var mesg = document.createElement('p');
 		mesg.id = "disconnect-mesg";
