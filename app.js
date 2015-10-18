@@ -64,7 +64,7 @@ app.get('/chat', function(req, res) {
 io.on('connection', function(socket){
 	serverLog(5, "user connected");
 	socket.on("location", function(position) {
-		serverLog(-2, "position passed: " + position + "\nposition.coords: " + position.coords);
+		serverLog(1, "position passed: " + position + "\nposition.coords: " + position.coords);
 		if (position.coords) {
 			serverLog(4, "got location...");
 			var userObj = {};
@@ -102,8 +102,8 @@ function match(userObj) {
 	var closest_user;
 	var closest_dist = -1; // initialize to negative distance -- i.e. impossible value
 	
-	Object.keys(users).forEach(function(key) {
-		if (users[key].connectedTo === null) {
+	users.forEach(function(key) {
+		if (typeof users[key].lat === "number" && typeof users[key].lon === "number") {
 			var dist = coordDistance(userObj.lat, userObj.lon, users[key].lat, users[key].lon);
 			if (dist < closest_dist || ((closest_dist < 0) && dist > closest_dist)) { 
 				// TODO: better checking of negative (can't have negative distance)
@@ -163,12 +163,22 @@ function coordDistance(lat1, lon1, lat2, lon2) {
 	return R * c;
 }
 
+/*
+ * Generate roomID
+ */
 function guid() {
 	function s4() {
 		return Math.floor((1 + Math.random()) * 0x10000) .toString(16) .substring(1);
 	}
-	return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-			s4() + '-' + s4() + s4() + s4();
+	return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+}
+
+/*
+ *	Generate Unique identification numbers 
+ *	TODO: make better???
+ */
+function uin() {
+	return "naybr_" + Math.random().toFixed(8).toString(10).replace(".", "");
 }
 
 /*
