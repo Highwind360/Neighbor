@@ -7,6 +7,9 @@ window.onload = function() {
 		return false;
 	});
 	socket.on("chat message", recieveChat);
+	$("#nextRoom").click(function() {
+		socket.emit("next", null);
+	});
 };
 
 function recieveChat(content) {
