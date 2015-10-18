@@ -45,6 +45,7 @@ html, body, #chatBottom, #chatTop, #rightBar, #leftBar, #localVideo, #remoteVide
 #chatTop{
 	background-color: #333333;
 	height: 60%;
+	position: relative;
 }
 
 #chatBottom{
@@ -54,4 +55,22 @@ html, body, #chatBottom, #chatTop, #rightBar, #leftBar, #localVideo, #remoteVide
 
 #chatBottom, #leftBar, #rightBar{
 	overflow: scroll;
+}
+
+button#nextRoom {
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+	cursor: pointer;
+	background-color: #009bff;
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+	border-radius: 0px;
+	border: none;
+	width: 200px;
+	height: 50px;
+	color: #ffffff;
+	font-weight: 500;
+	font-size: 15px;
+	font-family: Verdana;
 }
