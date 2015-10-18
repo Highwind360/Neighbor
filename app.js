@@ -64,6 +64,7 @@ app.get('/chat', function(req, res) {
 io.on('connection', function(socket){
 	serverLog(5, "user connected");
 	socket.on("location", function(position) {
+		serverLog(-2, "position passed: " + position + "\nposition.coords: " + position.coords);
 		if (position.coords) {
 			serverLog(4, "got location...");
 			var userObj = {};
@@ -87,7 +88,6 @@ io.on('connection', function(socket){
 		}
 	});
 	socket.on("disconnect", function() {
-		console.log("user disconnected");
 		serverLog(0, "user disconnected");
 	});
 });
