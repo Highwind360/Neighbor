@@ -21,6 +21,12 @@ if (!String.prototype.startsWith) {
 	};
 }
 
+if (!Number.prototype.toRad) {
+	Number.prototype.toRad = function() {
+		return this * (Math.PI / 180);
+	};
+}
+
 permitAccessTo("css");
 permitAccessTo("scripts");
 permitAccessTo("view");
@@ -40,25 +46,24 @@ app.get('/', function(req, res) {
 	res.sendFile(__dirname + "/view/index.html");
 });
 
-app.get('/chat', function(req, res){
-	res.sendFile(__dirname + "/view/chat.html");
-});
-
 /****************************** EVENT HANDLERS *******************************/
 
 io.on('connection', function(socket){
 	console.log('user connected');
 	socket.on("location", function(position) {
-		var lat = position.coords.latitude;
-		var lon = position.coords.longitude;
-		users[socket] = {
-			"lat": lat,
-			"lon": lon
-		};
-		match(users[socket]);
+		if (position.coords) {
+			var lat = position.coords.latitude;
+			var lon = position.coords.longitude;
+			users[socket] = {
+				"lat": lat,
+				"lon": lon,
+				"available": true
+			};
+			match(users[socket]);
+		}
 	});
-	socket.on("message", function(content) {
-		serverLog(1, 
+	socket.on("chat message", function(content) {
+		console.log("content: " + content);
 		io.emit("chat message", content);
 	});
 	socket.on("disconnect", function() {
@@ -70,7 +75,33 @@ io.on('connection', function(socket){
 /**************************** HELPER FUNCTIONS ******************************/
 
 function match(userObj) {
-	// TODO: DANNNNNNNNNNNN
+	var closest_user;
+	var closest_dist = 99999999999;
+	
+	Object.keys(obj).forEach(function(key) {
+		if (users[key].available == true) {
+			var dist = coordDistance(userObj.lat, userObj.lon, users[key].lat, users[key].lon);
+			if (dist < closest_dist) {
+				closest_dist = dist;
+				closest_user = users[key];
+			}
+		}
+	});
+	userObj.available = false;  // TODO: trigger an event when someone wants to move on to another person
+	return closest_user;
+}
+
+function coordDistance(lat1, lon1, lat2, lon2) {
+	var R = 6371;
+	var dLat = (lat2 - lat1).toRad();
+	var dLon = (lon2 - lon1).toRad();
+	var lat1 = lat1.toRad();
+	var lat2 = lat2.toRad();
+
+	var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+		Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2);
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+	return R * c;
 }
 
 /*
@@ -101,24 +132,21 @@ function serverLog(type, message, extra) {
 		badType("serverLog", message, "string");
 		okay = false;
 	}
-	if (okay) {
-		var output = [
-			function(msg) { return chalk.bgRed(msg); },   // -2 
-			function(msg) { return chalk.red(msg); },     // -1
-			function(msg) { return chalk.yellow(msg); },  //  0
-			function(msg) { return chalk.cyan(msg); },    //  1
-			function(msg) { return chalk.magenta(msg); }, //  2
-			function(msg) { return (msg); },              //  3
-			function(msg) { return chalk.inverse(msg); }, //  4
-			function(msg) { return chalk.green(msg); }    //  5
-		];
-		type = type % output.length;
-		var outputtedMsg = output[type + 2];
-		if (type < 0 ) {
-			console.error(outputtedMsg);
-		} else {
-			console.log(outputtedMsg);
-		}
+	var output = [
+		function(msg) { return chalk.bgRed(msg); },   // -2 
+		function(msg) { return chalk.red(msg); },     // -1
+		function(msg) { return chalk.yellow(msg); },  //  0
+		function(msg) { return chalk.cyan(msg); },    //  1
+		function(msg) { return chalk.magenta(msg); }, //  2
+		function(msg) { return (msg); },              //  3
+		function(msg) { return chalk.inverse(msg); }, //  4
+		function(msg) { return chalk.green(msg); }    //  5
+	];
+	var outputtedMsg = output[type + 2];
+	if (type < 0 ) {
+		console.error(outputtedMsg);
+	} else {
+		console.log(outputtedMsg);
 	}
 }
 
