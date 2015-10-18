@@ -7,7 +7,11 @@ window.onload = function(){
 	$("#startChat").click(function(){
 		// alert("emitting location");
 		navigator.geolocation.getCurrentPosition(function(position) {
-			socket.emit("location", position.coords);
+			var temp = {
+				"latitude": position.coords.latitude,
+				"longitude": position.coords.longitude
+			};
+			socket.emit("location", temp);
 		});
 		
 		$('#startChat').hide();
