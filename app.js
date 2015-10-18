@@ -81,6 +81,15 @@ io.on('connection', function(socket){
 	});
 	socket.on("next", function(currentRoomId) {
 		serverLog(1, "next button pressed");
+		var uin = null;
+		if (rooms[currentRoomId].user1.sock === socket) {
+			uin = users[rooms[currentRoomId].user1].uin;
+		} else {
+			uin = users[rooms[currentRoomId].user2].uin;
+		}
+		users[uin].mms = Date.now();
+		users[uin].qInd = queue.length - 1;
+		matchmaker(users[uin]);
 	});
 	socket.on("chat message", function(content) {
 		if (content.trim()) {
@@ -106,8 +115,6 @@ function match(userObj) {
 	var q   = queue;
 	var len = q.length;
 
-	serverLog(-1, "user lon: " + userObj.lon + "\nuser lat: " + userObj.lat);
-	
 	for (var i = 0; i < len; i++) {
 		var potentialMatch = q[len - 1 - i];
 		var dist = coordDistance(userObj.lat, userObj.lon, potentialMatch.lat, potentialMatch.lon);
@@ -150,7 +157,9 @@ function initUser(sock) {
 
 /**************************** HELPER FUNCTIONS ******************************/
 
-
+/*
+ *	Emits matched or notMatched events to clients upon matchmaking success/failure.
+ */
 function matchmaker(userObj) {
 	var matched_user = match(userObj);
 	if (matched_user) {
