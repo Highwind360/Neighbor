@@ -1,15 +1,21 @@
 var socket = io();
 
 window.onload = function(){
+	$("#loadingIcon").hide();
+
 	$("#startChat").click(function(){
 		// alert("emitting location");
 		navigator.geolocation.getCurrentPosition(function(position) {
 			socket.emit("location", position);
 		});
-		window.location.assign("/loading");
+		
+		// put loading info on page
+		$('#startChat').hide();
+		$('#loadingIcon').show();
+		$('#prompter').text("Please wait while we find a chat partner near you.");
 	});
 
-	socket.on("match", function(roomId) {
-		console.log("motched with room id: " + roomId);
+	socket.on("matched", function(roomId) {
+		window.location.replace("/chat");
 	});
 };
