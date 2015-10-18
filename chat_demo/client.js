@@ -3,15 +3,15 @@
 	var socket = io();
 
 	window.onload = function() {
-		document.getElementById("msg").submit = sendChat;
+		$("#msg").submit(function() {
+			socket.emit("chat message", $("#m").val());
+			$("#m").val("");
+			return false;
+		});
 		socket.on("chat message", recieveChat);
 	};
 
 	function sendChat() {
-		var content = document.getElementById("m").value;
-		socket.emit("chat message", content);
-		document.getElementById("m").value = "";
-		return false;
 	}
 
 	function recieveChat(content) {
