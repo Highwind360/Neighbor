@@ -21,6 +21,9 @@ if (!String.prototype.startsWith) {
 	};
 }
 
+/*
+ *	Number.toRad polyfill
+ */
 if (!Number.prototype.toRad) {
 	Number.prototype.toRad = function() {
 		return this * (Math.PI / 180);
@@ -38,7 +41,7 @@ http.listen(8080, function(){
 	console.log('program listening on *:8080');
 });
 
-var users = {};
+var users = [];
 
 /********************************** ROUTING **********************************/
 
@@ -54,12 +57,15 @@ io.on('connection', function(socket){
 		if (position.coords) {
 			var lat = position.coords.latitude;
 			var lon = position.coords.longitude;
-			users[socket] = {
+			var userObj = {};
+			userObj[socket] = {
 				"lat": lat,
 				"lon": lon,
-				"available": true
+				"connectedTo": null,
+				"searchStart": Date.now()
 			};
-			match(users[socket]);
+			users.push(userObj);
+			var pair = match(userObj);
 		}
 	});
 	socket.on("chat message", function(content) {
@@ -72,25 +78,37 @@ io.on('connection', function(socket){
 });
 
 
-/**************************** HELPER FUNCTIONS ******************************/
+/***************************** MAIN FUNCTIONS ********************************/
 
+/*
+ *	This function returns the most relevant user to connect to, given a userObject
+ */
 function match(userObj) {
 	var closest_user;
-	var closest_dist = 99999999999;
+	var closest_dist = -1; // initialize to negative distance -- i.e. impossible value
 	
 	Object.keys(obj).forEach(function(key) {
-		if (users[key].available == true) {
+		if (users[key].connectedTo === null) {
 			var dist = coordDistance(userObj.lat, userObj.lon, users[key].lat, users[key].lon);
-			if (dist < closest_dist) {
+			if (dist < closest_dist) {  // TODO: better checking of negative (can't have negative distance)
 				closest_dist = dist;
 				closest_user = users[key];
 			}
 		}
 	});
-	userObj.available = false;  // TODO: trigger an event when someone wants to move on to another person
-	return closest_user;
+	if (closest_dist < 0) {
+		return null;
+	} else {
+		userObj.connectedTo = key;  // TODO: trigger an event when someone wants to move on to another person
+		return closest_user;
+	}
 }
 
+/**************************** HELPER FUNCTIONS ******************************/
+
+/*
+ *	Determines distance between two coordinate points
+ */ 
 function coordDistance(lat1, lon1, lat2, lon2) {
 	var R = 6371;
 	var dLat = (lat2 - lat1).toRad();

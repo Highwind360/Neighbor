@@ -9,3 +9,5 @@ http.listen(8080, function() {
 app.get('/', function(req, res) {
 	res.sendFile(__dirname + '/index.html');
 });
+
+app.use('/rtc.js', express.static(__dirname + '/rtc.js'));
