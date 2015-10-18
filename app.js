@@ -11,9 +11,9 @@ var io = require('socket.io')(http);
 var logger = require("morgan");
 var chalk = require("chalk");
 
-permitAccessTo("css");
-permitAccessTo("scripts");
-permitAccessTo("view");
+permitAccessTo("/css");
+permitAccessTo("/scripts");
+permitAccessTo("/view");
 
 app.use(logger("dev")); // enable logging
 
@@ -24,6 +24,10 @@ http.listen(8080, function(){
 /********************************** ROUTING **********************************/
 app.get('/', function(req, res) {
 	res.sendFile(__dirname + "/view/index.html");
+});
+
+app.get('/createRoom', function(req, res) {
+	
 });
 
 /****************************** EVENT HANDLERS *******************************/
@@ -43,9 +47,9 @@ io.on('connection', function(socket){
 
 function permitAccessTo(path) {
 	if (typeof path === "string") {
-		if (!path.startsWith("/")) {
-			path = "/" + path;
-		}
+		// if (!path.startsWith("/")) {
+		// 	path = "/" + path;
+		// }
 		app.use(path, express.static(__dirname + path));
 	} else {
 		serverLog(-1, "permitAccessTo() requires a string argument; you provided a(n) " + typeof path);
