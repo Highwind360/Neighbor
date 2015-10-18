@@ -93,7 +93,7 @@ button#nextRoom {
 	font-family: Verdana, sans-serif;
 }
 
-button#msgSend {
+input#msgSend {
 	position: absolute;
 	right: 0px;
 	cursor: pointer;
