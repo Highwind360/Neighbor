@@ -101,11 +101,12 @@ function match(userObj) {
 	var closest_user = null;
 	var closest_dist = -1; // initialize to negative distance -- i.e. impossible value
 	var match_index  = -1;
-
+	var q   = queue;
+	delete q[userObj.qInd];
 	var len = queue.length;
 	
 	for (var i = 0; i < len; i++) {
-		var potentialMatch = queue[len - 1 - i];
+		var potentialMatch = q[len - 1 - i];
 		var dist = coordDistance(userObj.lat, userObj.lon, potentialMatch.lat, potentialMatch.lon);
 		serverLog(2, "dist: " + dist);
 		if (dist < closest_dist || ((closest_dist < 0) && dist > closest_dist)) { 
@@ -123,8 +124,7 @@ function match(userObj) {
 		serverLog(2, "room generated");
 		users[userObj.uin].room = roomID;
 		users[closest_user.uin].room = roomID;
-		delete queue[userObj.qInd];
-		delete queue[match_index];
+		delete queue[match_index];  // if someone got removed, i could remove wrong person here :/
 		rooms[roomID] = {
 			"user1": userObj,
 			"user2": users[closest_user]
@@ -168,8 +168,8 @@ function coordDistance(lat1, lon1, lat2, lon2) {
 	var R = 6371;
 	var dLat = (lat2 - lat1).toRad();
 	var dLon = (lon2 - lon1).toRad();
-	var lat1 = lat1.toRad();
-	var lat2 = lat2.toRad();
+	lat1 = lat1.toRad();
+	lat2 = lat2.toRad();
 
 	var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
 		Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2);
