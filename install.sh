@@ -8,8 +8,8 @@ BASE=/var/www/neighbor
 mkdir -p $BASE
 
 # Add elements here:
-for x in node_modules app.js client do
-	mv $x $BASE/
+for x in node_modules app.js view css; do
+	cp -r $x $BASE/;
 done
 
 exit 0
