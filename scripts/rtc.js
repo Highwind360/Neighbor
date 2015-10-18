@@ -36,17 +36,19 @@ webrtc.on('videoRemoved', function (video, peer) {
 	}
 });
 
-webrtc.on('message', function(data) {
-	if(data.type === 'chat') {
-		console.log(data);		
-	}
-});
-
-$('#msg').submit(function(){
-	var msg = $('#msgBox').val();
-	webrtc.sendToAll('chat', {data: msg});
-	$('#msgBox').val('');
-});
+// Redundant sockets
+//
+// webrtc.on('message', function(data) {
+// 	if(data.type === 'chat') {
+// 		console.log(data);		
+// 	}
+// });
+// 
+// $('#msg').submit(function(){
+// 	var msg = $('#msgBox').val();
+// 	webrtc.sendToAll('chat', {data: msg});
+// 	$('#msgBox').val('');
+// });
 
 function getURLParameter(name) {
   return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
